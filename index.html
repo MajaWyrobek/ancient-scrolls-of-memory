@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="assets/img/cthulhu_icon.png" type="image/png" rel="icon" sizes="32x32">
+    <title>Ancient scrolls of memory</title>
+	<link href="assets/style/main.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/vendor/css/Treant.css" type="text/css"/>
+	<link href="assets/vendor/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+	<script src="assets/vendor/js/jquery-3.6.0.js"></script>
+	<script src="assets/vendor/js/bootstrap.bundle.js"></script>
+	<script src="assets/vendor/js/raphael.js"></script>
+    <script src="assets/vendor/js/Treant.js"></script>
+	<script src="assets/scripts/main.js" type="module"></script>
+  </head>
+  <body class="py-4">
+	<header>
+		<div class="row">
+			<div class="col-md-6" style="display: inline;">
+				<p style="display: inline;">Logged as: <span id="headerUsername"></span></p><br>
+				<p style="display: inline;">Permissions: <span id="headerPermissions"></span></p>
+			</div>
+			<div class="col-md-6" style="display: inline;">
+				<button style="display: inline;" class="btn btn-warning right" type="button" id="logOutBtn">Log out</button>
+				<button class="btn btn-outline-secondary right" type="button" name="notificationBtn" id="notificationBtn">
+					<i id="bellIcon" class="bi bi-bell"></i> notifications
+					<span class="position top-0 start-100 translate-middle badge rounded-pill bg-danger invisible" id="notifBadge">99+</span>
+				</button>
+			</div>
+		</div>
+	</header>
+	
+	<div class="modal fade" id="notificationsModal">
+        <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>Notifications</h4>
+					<button type="button" id="closeNotificationsModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<div id="notificationDiv">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="LoginModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h2 class="modal-title"><b>Welcome to ancient scrolls of memory</b></h2>
+					<h4 class="modal-title center">A Call of Cthulhu characters' manager and database</h4>
+					<hr>
+					<h1 class="h3 mb-3 font-weight-normal">Sign in to your account</h1>
+					<label for="loginInputEmail" class="sr-only">Email address</label>
+					<input type="text" id="loginInputEmail" class="form-control" placeholder="Email address" required autofocus>
+					<label for="loginInputPassword" class="sr-only">Password</label>
+					<input type="password" id="loginInputPassword" class="form-control" placeholder="Password" required>
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="signIn" name="signIn">Sign in</button>
+					<p>Not yet a user? <button class="btn btn-secondary" id="goToSignUpBtn">Sign up</button></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="SignUpModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h2 class="modal-title"><b>Welcome to ancient scrolls of memory</b></h2>
+					<h4 class="modal-title center">A Call of Cthulhu characters' manager and database</h4>
+					<hr>
+					<h1 class="h3 mb-3 font-weight-normal">Create your account</h1>
+					<label for="signUpInputUsername" class="sr-only">Your character's name</label>
+					<input type="text" id="signUpInputUsername" class="form-control" placeholder="Your character's name" required autofocus>
+					<label for="signUpInputEmail" class="sr-only">Email address</label>
+					<input type="text" id="signUpInputEmail" class="form-control" placeholder="Email address" required>
+					<label for="signUpInputPassword" class="sr-only">Password</label>
+					<input type="password" id="signUpInputPassword" class="form-control" placeholder="Password" required>
+					<input type="checkbox" id="GM-permissions" name="GM-permissions" value="yes"> I am a Game Master, requesting special permissions
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="signUp" name="signUp">Sign up</button>
+					<p>Already have an account? <button class="btn btn-secondary" id="goToLoginBtn">Sign in</button></p>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	<div class="modal fade" id="EditPlayersInfoModal">
+        <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Edit your data</h2>
+					 <button type="button" id="closeEditInfoModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>E-mail: <input type="email" id="emailEdit" value=""></p>
+					<p>Character's name: <input type="text" id="charactersNameEdit" value=""></p>
+					<p>Players's name: <input type="text" id="playersNameEdit" value=""></p>
+					<p>Occupation: <input type="text" id="occupationEdit" value=""></p>
+					<p>Age: <input type="text" id="ageEdit" value=""></p>
+					<p>Gender: <input type="text" id="genderEdit" value=""></p>
+					<p>Residence: <input type="text" id="residenceEdit" value=""></p>
+					<p>Birthplace: <input type="text" id="birthplaceEdit" value=""></p>
+					<br>
+					<p>STR: <input type="text" id="strEdit" value=""></p>
+					<p>CON: <input type="text" id="conEdit" value=""></p>
+					<p>SIZ: <input type="text" id="sizEdit" value=""></p>
+					<p>DEX: <input type="text" id="dexEdit" value=""></p>
+					<p>APP: <input type="text" id="appEdit" value=""></p>
+					<p>INT (idea): <input type="text" id="ideaEdit" value=""></p>
+					<p>POW: <input type="text" id="powEdit" value=""></p>
+					<p>EDU: <input type="text" id="eduEdit" value=""></p>
+					<p>Move rate: <input type="text" id="moveRateEdit" value=""></p>
+					<p>Hit points: <input type="text" id="hitPointsEdit" value=""></p>
+					<p>Sanity: <input type="text" id="sanityEdit" value=""></p>
+					<p>Luck: <input type="text" id="luckEdit" value=""></p>
+					<p>Magic points: <input type="text" id="magicPointsEdit" value=""></p>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="saveChangesBtn">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
+	<div class="modal fade" id="createNewEntryModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Create new entry</h2>
+					<button type="button" id="closeCreateNewEntryModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Type: 
+						<select name="entryType" id="newEntryType">
+							<option value="person">Person/specialist</option>
+							<option value="place">Place</option>
+							<option value="monster">Monster</option>
+							<option value="myth">Myth</option>
+							<option value="god">God</option>
+						</select>
+					</p>
+					<p>Title: <input type="text" id="newEntryTitle" value=""></p>
+					<p>Notes: <input type="text" id="newEntryNotes" value="" style="height:120px; width:200px;"></p>
+					<p>Share with:</p>
+					<div id="createNewEntryShare">
+					</div>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="saveNewEntryBtn">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="GMAllEntriesModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>All entries</h2>
+					<button type="button" id="closeGMAllEntriesModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body" id="GMAllEntriesModalDiv">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="editEntryModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Edit entry</h2>
+					<button type="button" id="closeEditEntryModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Type: 
+						<select name="entryType" id="editEntryType">
+							<option value="person">Person/specialist</option>
+							<option value="place">Place</option>
+							<option value="monster">Monster</option>
+							<option value="myth">Myth</option>
+							<option value="god">God</option>
+						</select>
+					</p>
+					<p>Title: <input type="text" id="editEntryTitle" value=""></p>
+					<p>Notes: <input type="text" id="editEntryNotes" value="" style="height:120px; width:200px;"></p>
+					<p>Share with:</p>
+					<div id="editNewEntryShare">
+					</div>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="saveEditedEntryBtn">Save changes</button>
+					<button class="btn btn-lg btn-danger btn-block" type="submit" id="deleteEditedEntryBtn">Delete entry</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="ownerBranchOptionsModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h2>Branch options</h2>
+				<button type="button" id="closeOwnerBranchOptionsModalBtn" class="btn btn-outline-secondary right">X</button>
+				</div>
+				<div class="modal-body">
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="editBranchBtn">Edit branch</button>
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="createNewBranchBtn">Add new branch</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="sharedBranchOptionsModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h2>Branch options</h2>
+				<button type="button" id="closeSharedBranchOptionsModalBtn" class="btn btn-outline-secondary right">X</button>
+				</div>
+				<div class="modal-body">
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="readBranchBtn">Show branch</button>
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="createNewBranchFromSharedBtn">Add new branch</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="mainNodeOptionsModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h2>Branch options</h2>
+				<button type="button" id="closeMainNodeOptionsModalBtn" class="btn btn-outline-secondary right">X</button>
+				</div>
+				<div class="modal-body">
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="createNewBranchFromMNBtn">Add new branch</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="testNodeOptionsModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h2>Test node</h2>
+				<button type="button" id="closeTestNodeOptionsModalBtn" class="btn btn-outline-secondary right">X</button>
+				</div>
+				<div class="modal-body">
+					<p>In order to delete this node, create a new branch from the initial one. If someone shares a branch with you, this test node will disappear as well.</p>
+					<p>If you have some branches already created, reload the mind map. If your branches don't show after several reloads, please check your internet connection.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="readEntryModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1> Entry: <span id="readEntryTitle"></span></h1>
+					<button type="button" id="closeReadEntryModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Author: <span id="readEntryAuthor"></span></p>
+					<p>Type: <span id="readEntryType"></span></p>
+					<p>Notes: <span id="readEntryNotes" style="height:120px; width:200px;"></span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="createNewBranchModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Create new mind map branch</h2>
+					<button type="button" id="closeCreateNewBranchModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Title: <input type="text" id="newBranchTitle" value=""></p>
+					<p>Notes: <input type="text" id="newBranchNotes" value="" style="height:120px; width:200px;"></p>
+					<p>Share with:</p>
+					<div id="createNewBranchShare">
+					</div>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="saveNewBranchBtn">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="editBranchModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Edit mind map branch</h2>
+					<button type="button" id="closeEditBranchModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Title: <input type="text" id="editBranchTitle" value=""></p>
+					<p>Notes: <input type="text" id="editBranchNotes" value="" style="height:120px; width:200px;"></p>
+					<p>Share with:</p>
+					<div id="editBranchShare">
+					</div>
+					<button class="btn btn-lg btn-success btn-block" type="submit" id="saveEditedBranchBtn">Save</button>
+					<button class="btn btn-lg btn-warning btn-block" type="submit" id="archiveEditedBranchBtn">Archive</button>
+					<button class="btn btn-lg btn-danger btn-block" type="submit" id="deleteEditedBranchBtn">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="readBranchModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Title: <span id="readBranchTitle"></span></h2>
+					<button type="button" id="closeReadBranchModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body">
+					<p>Author: <span id="readBranchAuthor"></span></p>
+					<p>Notes: <span id="readBranchNotes" style="height:120px; width:200px;"></span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="GMAllBranchesModal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>All branches (entire mind map)</h2>
+					<button type="button" id="closeGMAllBranchesModalBtn" class="btn btn-outline-secondary">X</button>
+				</div>
+				<div class="modal-body" id="tree-simple-GM">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row gx-5">
+			<div class="col mx-auto">
+				<h1>Ancient scrolls of memory</h1>
+				<h2>A Call of Cthulhu RPG character manager</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+	<hr>
+		<div class="row">
+			<div class="col-md-5">
+				<h3>Character's section
+					<button class="btn btn-secondary right" id="editCharacterBtn">Edit</button>
+				</h3>
+				<p>Character's name: <span id="charactersName"></span></p>
+				<p>Players's name: <span id="playersName"></span></p>
+				<p>Occupation: <span id="occupation"></span></p>
+				<p>Age: <span id="age"></span></p>
+				<p>Gender: <span id="gender"></span></p>
+				<p>Residence: <span id="residence"></span></p>
+				<p>Birthplace: <span id="birthplace"></span></p>
+				<br>
+				<p>STR: <span id="str"></span>, <span id="strHalf"></span>, <span id="strFifth"></span></p>
+				<p>CON: <span id="con"></span>, <span id="conHalf"></span>, <span id="conFifth"></span></p>
+				<p>SIZ: <span id="siz"></span>, <span id="sizHalf"></span>, <span id="sizFifth"></span></p>
+				<p>DEX: <span id="dex"></span>, <span id="dexHalf"></span>, <span id="dexFifth"></span></p>
+				<p>APP: <span id="app"></span>, <span id="appHalf"></span>, <span id="appFifth"></span></p>
+				<p>INT (idea): <span id="idea"></span>, <span id="ideaHalf"></span>, <span id="ideaFifth"></span></p>
+				<p>POW: <span id="pow"></span>, <span id="powHalf"></span>, <span id="powFifth"></span></p>
+				<p>EDU: <span id="edu"></span>, <span id="eduHalf"></span>, <span id="eduFifth"></span></p>
+				<p>Move rate: <span id="moveRate"></span>, <span id="moveRateHalf"></span>, <span id="moveRateFifth"></span></p>
+				<p>Hit points: <span id="hitPoints"></span></p>
+				<p>Sanity: <span id="sanity"></span></p>
+				<p>Luck: <span id="luck"></span></p>
+				<p>Magic points: <span id="magicPoints"></span></p>
+			</div>
+			<div class="col-md-7">
+				<div class="card">
+					<div class="card-body">
+						<div id="cardHeader">
+							<h5 class="card-title">Encyclopedia entries
+							<button class="btn btn-outline-secondary right" id="reloadEntriesBtn">(re)load your entries</button>
+							</h5>
+						</div>
+						<button class="btn btn-block btn-secondary" id="createNewEntryBtn">Create new entry</button>
+						<label for="allEntriesType">Type:</label>
+						<div class="btn-group" role="group" name="entriesTypesBtnContainer" id="entriesTypesBtnContainer">
+							<button type="button" class="btn active btn-outline-primary" id="allEntriesTypeBtn"> show all</button>
+							<button type="button" class="btn btn-outline-primary" id="personOrSpecialistEntriesTypeBtn"> person/specialist</button>
+							<button type="button" class="btn btn-outline-primary" id="placeEntriesTypeBtn"> place</button>
+							<button type="button" class="btn btn-outline-primary" id="monsterEntriesTypeBtn"> monster</button>
+							<button type="button" class="btn btn-outline-primary" id="mythEntriesTypeBtn"> myth</button>
+							<button type="button" class="btn btn-outline-primary" id="godEntriesTypeBtn"> god</button>
+						</div>
+						<br>
+						<div class="row allEntriesDiv">
+							<div class="col-md-6">
+								<p class="card-text">Own entries</p>
+								<div id="ownEntriesList" class="scrollable">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<p class="card-text">Shared entries</p>
+								<div id="sharedEntriesList" class="scrollable">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="card">
+					<div class="card-body">
+					<div id="cardHeaderMindMap">
+							<h5 class="card-title">Mind map
+							<button class="btn btn-outline-secondary right" id="reloadMindMapBtn">(re)load the mind map</button>
+							</h5>
+						</div>
+						<div id="tree-simple" class="mindMap">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<footer>
+	</footer>
+	
+  </body>
+</html>
