@@ -159,6 +159,7 @@ signUp.addEventListener('click', (e) => {
 			alert('User account created');
 			
 			$('#notificationDiv').empty();
+			$('#notificationDiv').prepend("<p>No new notifications</p>");
 			
 			signUpModal.hide();
 			
