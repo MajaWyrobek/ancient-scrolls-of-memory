@@ -74,7 +74,6 @@ var ownerBranchOptionsModal = new bootstrap.Modal(document.getElementById('owner
 var sharedBranchOptionsModal = new bootstrap.Modal(document.getElementById('sharedBranchOptionsModal'))
 var mainNodeOptionsModal = new bootstrap.Modal(document.getElementById('mainNodeOptionsModal'))
 var testNodeOptionsModal = new bootstrap.Modal(document.getElementById('testNodeOptionsModal'))
-var GMAllBranchesModal = new bootstrap.Modal(document.getElementById('GMAllBranchesModal'))
 var notificationsModal = new bootstrap.Modal(document.getElementById('notificationsModal'))
 
 	
@@ -1499,6 +1498,8 @@ $('#readBranchBtn').on("click", ()=>{ //when readBranchBtn button is clicked...
 	
 	var author = editedBranch.text["data-author"]; //get the branch's author uid
 	
+	console.log("author: " + author);
+	
 	//find the username of the author of the entry
 	for (var x in allUsersJSON) {
 		if (allUsersJSON[x].uid == author) {
@@ -1508,6 +1509,7 @@ $('#readBranchBtn').on("click", ()=>{ //when readBranchBtn button is clicked...
 	
 	//get all values (title and notes) of the entry
 	$('#readBranchTitle').text(editedBranch.text["name"]);
+	console.log(editedBranch.text["name"]);
 	$('#readBranchNotes').text(editedBranch.text["data-notes"]);
 	
 	sharedBranchOptionsModal.hide(); //hide sharedBranchOptionsModal modal
@@ -1540,8 +1542,4 @@ $('#cardHeaderMindMap').on("click","#showAllBranchesBtn", function(e){ //when sh
 	}
 	
 	var chart2 = new Treant(GMMindMap, function() {}, $ ); //show the mind map with all branches visible
-});
-
-$('#closeGMAllBranchesModalBtn').on("click", ()=>{ //when closeGMAllBranchesModalBtn is clicked...
-	GMAllBranchesModal.hide(); //hide GMAllBranchesModal modal
 });
