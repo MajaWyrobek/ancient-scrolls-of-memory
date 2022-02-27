@@ -99,13 +99,8 @@ $("#goToLoginBtn").on("click", ()=>{ //when goToLoginBtn button is clicked...
 
 $("#logOutBtn").on("click", ()=>{ //when logOutBtn button is clicked...
 	if (user) { //if a user is logged in..
-		try {
 		hideData(); //execute the method for hiding the data of previous user
 		auth.signOut(); //execute a Firebase method to sign out the user
-		}
-		catch (error) { //if there are any errors...
-			alert(error.message); //display an error message
-		}
 	}
 	else { //if a user is not logged in...
 		alert("Please reload the page in order to log in"); //show an alert
@@ -121,76 +116,76 @@ $("#signUp").on("click", () => { //when signUp button is clicked...
 	var appliedForGM = cb.checked;
 	
 	createUserWithEmailAndPassword(auth, email, password) //execute a Firebase method for creating the account
-		.then((userCredential) => { //user is signed in 
-			user = userCredential.user;
-			const id = user.uid;
-			
-			
-			onValue(ref(db, 'allUsersCount'), (snapshot) => { //get the number of registered users
-				numOfUsers = snapshot.val() + 1; //increase number of registered users
-				set(ref(db, 'allUsersCount'), numOfUsers);
-				set(ref(db, 'allUserslist/user' + numOfUsers), { //create the allUserList for easier search of username
-					uid: user.uid,
-					username: username
-				});
-			}, {
-				onlyOnce: true
+	.then((userCredential) => { //user is signed in 
+		user = userCredential.user;
+		const id = user.uid;
+		
+		
+		onValue(ref(db, 'allUsersCount'), (snapshot) => { //get the number of registered users
+			numOfUsers = snapshot.val() + 1; //increase number of registered users
+			set(ref(db, 'allUsersCount'), numOfUsers);
+			set(ref(db, 'allUserslist/user' + numOfUsers), { //create the allUserList for easier search of username
+				uid: user.uid,
+				username: username
 			});
-			
-			set(ref(db, 'users/' + user.uid), { //set all necessary database values
-				userNumber: numOfUsers,
-				email: email,
-				appliedForGM: appliedForGM,
-				GMpermissionsGranted: false,
-				picture: "assets/img/characters-photos/person.jpg",
-				charactersName: username,
-				playersName: "unknown",
-				occupation: "unknown",
-				age: "0",
-				gender: "unknown",
-				residence: "unknown",
-				birthplace: "unknown",
-				str: "0",
-				con: "0",
-				siz: "0",
-				dex: "0",
-				app: "0",
-				idea: "0",
-				pow: "0",
-				edu: "0",
-				moveRate: "0",
-				hitPoints: "0",
-				sanity: "0",
-				luck: "0",
-				magicPoints: "0"
-			})		
-			  
-			alert('User account created');
-			
-			signUpModal.hide();
-			
-			loadUserInfo(user, db); //a method to load the info about the user
-			getAllEntries(); //a method to get all entries from the database
-			getAllBranches(); //a method to get all branches from the database
-
-			$('#headerPermissions').text("Player");
-			$('#headerUsername').text(username);
-		})
-		.catch((error) => { //if errors are catched...
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			
-			if (error.message.includes("auth/network-request-failed")) { //show correct error message depeding on type of error
-				alert("Please check your internet connection and try again");
-			}
-			else if (error.message.includes("auth/auth/invalid-email")) {
-				alert("Please check the spelling of your email address");
-			}
-			else {
-				alert(errorMessage); 
-			}	
+		}, {
+			onlyOnce: true
 		});
+		
+		set(ref(db, 'users/' + user.uid), { //set all necessary database values
+			userNumber: numOfUsers,
+			email: email,
+			appliedForGM: appliedForGM,
+			GMpermissionsGranted: false,
+			picture: "assets/img/characters-photos/person.jpg",
+			charactersName: username,
+			playersName: "unknown",
+			occupation: "unknown",
+			age: "0",
+			gender: "unknown",
+			residence: "unknown",
+			birthplace: "unknown",
+			str: "0",
+			con: "0",
+			siz: "0",
+			dex: "0",
+			app: "0",
+			idea: "0",
+			pow: "0",
+			edu: "0",
+			moveRate: "0",
+			hitPoints: "0",
+			sanity: "0",
+			luck: "0",
+			magicPoints: "0"
+		})		
+		  
+		alert('User account created');
+		
+		signUpModal.hide();
+		
+		loadUserInfo(user, db); //a method to load the info about the user
+		getAllEntries(); //a method to get all entries from the database
+		getAllBranches(); //a method to get all branches from the database
+
+		$('#headerPermissions').text("Player");
+		$('#headerUsername').text(username);
+	})
+	.catch((error) => { //if errors are catched...
+		const errorCode = error.code;
+		const errorMessage = error.message;
+		
+		if (error.message.includes("auth/network-request-failed")) { //show correct error message depeding on type of error
+			alert("Please check your internet connection and try again");
+		}
+		else if (error.message.includes("auth/auth/invalid-email")) {
+			alert("Please check the spelling of your email address");
+		}
+		else {
+			alert(errorMessage); 
+		}	
 	});
+});
   
 $("#signIn").on("click", () => { //when signIn button is clicked...
 	//get values of the fields
@@ -252,8 +247,12 @@ $("#signIn").on("click", () => { //when signIn button is clicked...
 		if (GMpermissions) { //if user has GM permissions...
 			$('#headerPermissions').text("Game Master"); //set the textfield to "Game Master"
 			if (!showAllBranchesBtnAppended) { //and if the allBranchesBtn is not shown...
-				$('#reloadMindMapBtn').before('<button class="btn btn-outline-secondary right" id="showAllBranchesBtn">show all branches</button>'); //show it
-				showAllBranchesBtnAppended = true;
+				$('#reloadMindMapBtn').before('<button class="btn btn-outline-secondary right" id="showAllBranchesBtn">show all branches</button>'); //append the button
+				showAllBranchesBtnAppended = true; //set the boolean to true, so the button is appended
+			}
+			if (!showAllEntriesBtnAppended) { //if the user has Game Master permissions and the showAllEntries button is not shown...
+				$('#reloadEntriesBtn').before('<button class="btn btn-outline-secondary right" id="showAllEntriesBtn">show all entries</button>'); //append the button
+				showAllEntriesBtnAppended = true; //set the boolean to true, so the button is appended
 			}
 		}
 		else { //if user doesn't have GM permissions...
@@ -352,13 +351,8 @@ function hideData() { //a method to hide previous user's info on logout
 	userBranches = null;
 	
 	//hide Game Master's elements
-	if (showAllEntriesBtnAppended) {
-		$('#showAllEntriesBtn').remove();
-	}
-	
-	if (showAllBranchesBtnAppended) {
-		$('#showAllBranchesBtn').remove();
-	}
+	$('#showAllEntriesBtn').remove();
+	$('#showAllBranchesBtn').remove();
 	
 	//hide all notifications
 	newNotifications = [];
@@ -617,11 +611,6 @@ function getUsersAccessibleEntries() { //a method to get the entries which the l
 	for (var entry in sharedEntries) { //for each user's shared entry...
 		var insertSharedEntry = '<button type="button" class="filterEntries btn btn-link sharedEntryBtn ' + sharedEntries[entry].type + '" id="' + sharedEntries[entry].keyOfEntry + '"> ' + sharedEntries[entry].title + '</button><hr>'; //create a button with the entry's info
 		$("#sharedEntriesList").append(insertSharedEntry); //add this button to a proper div
-	}
-	
-	if (GMpermissions && !showAllEntriesBtnAppended) { //if the user has Game Master permissions and the showAllEntries button is not shown...
-		$('#reloadEntriesBtn').before('<button class="btn btn-outline-secondary right" id="showAllEntriesBtn">show all entries</button>'); //append the button
-		showAllEntriesBtnAppended = true; //set the boolean to true, so the button is appended
 	}
 }
 
@@ -1163,7 +1152,6 @@ $("#saveNewBranchBtn").on("click", function(e){ //when saveNewBranchBtn button i
 		HTMLid: keyOfBranch,
 		children: []
     };
-	
 	
 	if (allBranches == null) { //if there are no branches existing...
 		allBranches = [newNode]; //set newNode as the one-element array in allBranches
